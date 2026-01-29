@@ -10,9 +10,9 @@ La documentazione PDF è consultabile [QUA](docs/pdf/main.pdf)
 
 | Studente | Matricola | Ruolo Principale |
 | :--- | :--- | :--- |
-| Andrea Belli | 361054 | Database |
-| Nna Minkousse Kenneth James | 366361 | Frontend |
-| Samuele Premori | 361939 | Backend |
+| Andrea Belli | XXXX | Database |
+| Nna Minkousse Kenneth James | XXXX | Frontend |
+| Samuele Premori | XXXX | Backend |
 
 ## Quick start
 
