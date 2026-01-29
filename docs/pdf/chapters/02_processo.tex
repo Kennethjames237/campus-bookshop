@@ -1,0 +1,108 @@
+% =============================================================================
+% CHAPTER 2: PROCESSO DI SVILUPPO
+% =============================================================================
+
+\chapter{Processo di Sviluppo}
+
+\section{Metodologia}
+
+Il processo adottato \`e \textbf{Iterativo} ed \textbf{Incrementale}. Ogni Sprint trasforma un sottoinsieme di Requisiti in un incremento software funzionante, testato e documentato.
+
+\subsection{A. Sprint Planning}
+
+\begin{itemize}
+    \item \textbf{Analisi dei Requisiti:} Revisione dei requisiti ed eventuale aggiornamento.
+    \item \textbf{Selezione User Stories:} Spostamento delle user stories nello Sprintlog.
+    \item \textbf{Analisi:} Le user stories selezionate vengono dettagliate in \code{docs/features/} tramite:
+    \begin{itemize}
+        \item Lo Use Case Diagram, con tabella Use Case per dettaglio ed eventuali Activity Diagram.
+        \item I Criteri di Accettazione.
+        \item La strategia per i Test di Integrazione manuali.
+    \end{itemize}
+    \item \textbf{Design Session:} Definizione dei contratti:
+    \begin{itemize}
+        \item Specifica JSON delle API.
+        \item Specifica metodi interfaccia database.
+    \end{itemize}
+    \item \textbf{Task Assignment:} Suddivisione dei compiti, creazione dei branch \code{feature/} e creazione della issue relativa alla user story.
+\end{itemize}
+
+\subsection{B. Development Loop}
+
+\begin{itemize}
+    \item \textbf{Detailed Design:} Prima della codifica, ogni sviluppatore progetta il proprio componente nella cartella della feature:
+    \begin{itemize}
+        \item Diagrammi delle Classi.
+        \item Diagrammi ER specifici.
+    \end{itemize}
+    \item \textbf{Coding \& Unit Testing:} Scrittura del codice sorgente e degli eventuali Unit Test.
+    \item \textbf{Pull Request:} Lo sviluppatore apre una PR verso il ramo di integrazione (\code{develop}).
+    \item \textbf{Merge:} Se la review \`e positiva e i test passano, il codice viene integrato in \code{develop}.
+\end{itemize}
+
+\subsection{C. Sprint Review}
+
+\begin{itemize}
+    \item \textbf{Integration Test:} Verifica completa del flusso basata sui \textbf{Criteri di Accettazione}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.85\textheight]{../img/process-diagram.drawio}
+    \caption{Activity Diagram del Processo di Sviluppo}
+\end{figure}
+
+\section{Organizzazione del Team}
+
+\subsection{Database}
+\begin{itemize}
+    \item \textbf{Responsabile:} Andrea Belli
+    \item \textbf{Responsabilit\`a:} gestione Database, gestione classe interfaccia Database.
+\end{itemize}
+
+\subsection{Backend}
+\begin{itemize}
+    \item \textbf{Responsabile:} Samuele Premori
+    \item \textbf{Responsabilit\`a:} Logica business, esposizione API, test di unit\`a.
+\end{itemize}
+
+\subsection{Frontend}
+\begin{itemize}
+    \item \textbf{Responsabile:} Nna Minkousse Kenneth James
+    \item \textbf{Responsabilit\`a:} Interfaccia utente, integrazione API, test manuali.
+\end{itemize}
+
+\section{Branch Strategy}
+
+\subsection{Branch Structure}
+\begin{itemize}
+    \item \code{main}: codice stabile e testato
+    \item \code{dev}: ramo di integrazione continua delle feature
+    \item \code{feature/T\{ID\}}: ramo riguardante la task specifica, singolo per sviluppatore.
+\end{itemize}
+
+\subsection{Regole}
+\begin{itemize}
+    \item Vietato il push diretto su \code{main}.
+    \item Il push diretto su \code{dev} avviene solo per modifiche della documentazione o modifiche tra gli sprint approvate in maniera unanime.
+    \item Ogni ramo \code{feature} si chiude con un pull request su \code{dev}.
+    \item Ogni pull request da \code{dev} a \code{main} deve contenere la documentazione aggiornata e il tag relativo alla versione.
+\end{itemize}
+
+\section{Testing}
+
+La strategia di testing \`e divisa in:
+
+\begin{itemize}
+    \item \textbf{Unit Testing:}
+    \begin{itemize}
+        \item Applicato alle classi del Backend.
+        \item Obbligatorio passare i test prima della PR.
+        \item Framework: PHPUnit.
+    \end{itemize}
+    
+    \item \textbf{Integration Testing:}
+    \begin{itemize}
+        \item Eseguito manualmente seguendo i file di collaudo compilati a inizio sprint.
+    \end{itemize}
+\end{itemize}

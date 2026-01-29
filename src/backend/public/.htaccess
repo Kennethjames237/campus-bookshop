@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Redirect all requests to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+    # Pass Authorization header to PHP (Apache strips it by default)
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
+
+# Deny access to sensitive files
+<FilesMatch "\.(env|htaccess|htpasswd)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

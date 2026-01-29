@@ -1,0 +1,279 @@
+% =============================================================================
+% CHAPTER 4: ARCHITETTURA DEL SISTEMA
+% =============================================================================
+
+\chapter{Architettura del Sistema}
+
+\section{Pattern MVP}
+
+Il sistema adotta un'architettura \textbf{Model-View-Presenter (MVP)}.
+
+\subsection{View}
+\begin{itemize}
+    \item Definisce la struttura della pagina e gli stili.
+    \item Espone gli elementi del DOM (bottoni, form) che vengono manipolati dal Presenter.
+\end{itemize}
+
+\subsection{Presenter}
+\begin{itemize}
+    \item Intercetta gli eventi utente dalla View.
+    \item Invoca il Model remoto (tramite Fetch API).
+    \item Riceve i dati (JSON) e aggiorna la View manipolando il DOM.
+    \item Gestisce la logica di presentazione.
+\end{itemize}
+
+\subsection{Model}
+\begin{itemize}
+    \item Rappresenta lo stato del sistema e la Business Logic pura.
+    \item Espone un'interfaccia RESTful (JSON).
+    \item Riceve comandi dal Presenter.
+    \item Valida le regole di business (Sicurezza, Integrit\`a).
+    \item Restituisce i dati aggiornati o errori.
+\end{itemize}
+
+\section{Schema Dati}
+
+Questa sezione descrive la modellazione dei dati del sistema.
+
+\subsection{Modello Entit\`a-Relazione}
+
+Il modello logico dei dati si basa su quattro entit\`a principali: \textbf{User}, \textbf{Book}, \textbf{Transaction} e \textbf{Message}.
+
+Le principali scelte progettuali includono:
+
+\begin{itemize}
+    \item \textbf{Integrit\`a Referenziale:} L'uso di chiavi esterne (\code{seller\_id}) con vincolo \code{ON DELETE CASCADE} assicura che alla rimozione di un utente vengano rimossi automaticamente anche i suoi annunci, prevenendo dati orfani.
+    \item \textbf{Sicurezza:} Le password non vengono salvate in chiaro, ma sotto forma di hash.
+    \item \textbf{Tipi di dato:} Per il prezzo \`e stato scelto il tipo \code{DECIMAL} per garantire precisione nelle operazioni monetarie, evitando gli errori di arrotondamento tipici dei numeri in virgola mobile (\code{FLOAT}).
+    \item \textbf{Storico Prezzi:} Nella tabella transactions viene salvato una copia del prezzo al momento dell'acquisto. Questo garantisce che lo storico ordini rimanga corretto anche se il prezzo originale del libro venisse modificato in futuro.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.6\textheight]{../img/er-diagram.drawio}
+    \caption{Diagramma Entit\`a-Relazione}
+\end{figure}
+
+\subsection{Interfaccia al Database}
+
+Per la gestione della persistenza \`e stato adottato il design pattern \textbf{Data Access Object (DAO)}, con l'obiettivo di isolare completamente la logica di accesso ai dati dal resto dell'applicazione. Questa scelta permette ai Controller di interagire con il database attraverso metodi ad alto livello, ignorando i dettagli implementativi del linguaggio SQL o del driver specifico utilizzato.
+
+L'architettura si articola su due componenti principali:
+
+\begin{itemize}
+    \item \textbf{DatabaseInterface (Contratto):} Un'interfaccia PHP che definisce formalmente le operazioni CRUD (Create, Read, Update, Delete) e di autenticazione disponibili nel sistema.
+    \item \textbf{DatabaseService (Implementazione):} La classe concreta che realizza l'interfaccia utilizzando l'estensione \textbf{PDO (PHP Data Objects)}. Questa classe incapsula internamente la connessione al database, gestita in modo sicuro tramite variabili d'ambiente per evitare l'esposizione di credenziali nel codice sorgente.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.95\textwidth]{../img/databaseclass-diagram.drawio}
+    \caption{Class Diagram - Database Interface}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{Encapsulation:} Il driver PDO \`e dichiarato come propriet\`a privata all'interno del \code{DatabaseService}, impedendo accessi non autorizzati alla connessione dall'esterno della classe.
+    \item \textbf{Prepared Statements:} Ogni interazione con il database avviene tramite l'uso di query preparate; questa pratica \`e essenziale per neutralizzare il rischio di attacchi \textbf{SQL Injection}, garantendo che i dati di input (come email o ISBN) siano trattati correttamente dal driver.
+    \item \textbf{Iniezione delle Dipendenze:} L'istanza di \code{DatabaseService} viene creata centralmente nel router (\code{index.php}) e passata ai controller tramite i loro costruttori. Questo approccio facilita la manutenzione e assicura che l'intera richiesta HTTP utilizzi una singola connessione persistente.
+    \item \textbf{Data Mapping:} Il servizio si occupa di trasformare i risultati grezzi delle query (array associativi) in oggetti di tipo \code{Book} o \code{User}, permettendo ai controller di operare su entit\`a tipizzate e coerenti con il dominio dell'applicazione.
+\end{enumerate}
+
+\section{Sicurezza}
+
+Questa sezione definisce le specifiche di sicurezza per l'autenticazione e l'autorizzazione del sistema.
+
+\subsection{Hashing delle Password}
+
+Le password degli utenti non vengono mai salvate in chiaro nel database (RNF06).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Aspetto} & \textbf{Specifica} \\
+\midrule
+Funzione & \code{password\_hash()} di PHP \\
+Algoritmo & \code{PASSWORD\_BCRYPT} \\
+Verifica & \code{password\_verify()} (gestita dall'interfaccia DB) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{nota}
+L'hashing viene eseguito nel backend (AuthController) prima di passare l'oggetto User all'interfaccia database.
+\end{nota}
+
+\subsection{JSON Web Token (JWT)}
+
+Il sistema utilizza JWT per la gestione delle sessioni utente e l'autorizzazione agli endpoint protetti.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Aspetto} & \textbf{Specifica} \\
+\midrule
+Libreria & \code{firebase/php-jwt} \\
+Algoritmo & HS256 (HMAC-SHA256) \\
+Chiave Segreta & Variabile d'ambiente \code{JWT\_SECRET} \\
+Scadenza Token & 8 ore (28800 secondi) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Struttura del Token:}
+\begin{lstlisting}[style=bashStyle]
+Header.Payload.Signature
+\end{lstlisting}
+
+\textbf{Payload del Token:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "sub": 123,
+  "email": "utente@esempio.it",
+  "iat": 1737450000,
+  "exp": 1737478800
+}
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Campo} & \textbf{Descrizione} \\
+\midrule
+\code{sub} & ID dell'utente (subject) \\
+\code{email} & Email dell'utente \\
+\code{iat} & Timestamp di emissione (issued at) \\
+\code{exp} & Timestamp di scadenza (expiration) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Messaggi di Errore}
+
+Per prevenire attacchi di enumerazione utenti, i messaggi di errore relativi all'autenticazione sono generici:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Scenario} & \textbf{Messaggio Restituito} \\
+\midrule
+Email non registrata & ``Invalid credentials'' \\
+Password errata & ``Invalid credentials'' \\
+Token mancante/invalido & ``Unauthorized'' \\
+Token scaduto & ``Unauthorized'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{nota}
+Non viene mai rivelato se un'email \`e registrata o meno nel sistema.
+\end{nota}
+
+\subsection{Validazione Input}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Campo} & \textbf{Regole di Validazione} \\
+\midrule
+\code{email} & Formato email valido, non vuoto \\
+\code{username} & Non vuoto \\
+\code{password} & Minimo 8 caratteri \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Architettura Frontend Presenter}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.95\textwidth]{../img/presenter_class_diagram.drawio}
+    \caption{Class Diagram dei Presenter Frontend}
+\end{figure}
+
+Questa sezione spiega la struttura e le relazioni delle classi frontend come rappresentate nel diagramma delle classi. L'architettura segue una variante del pattern \textbf{Model-View-Presenter (MVP)}, dove i ``Presenter'' gestiscono la logica UI e la comunicazione con le API, mentre la ``View'' viene manipolata direttamente tramite il DOM.
+
+\subsection{ApiService (Servizio Statico)}
+
+\textbf{Ruolo:} Hub centrale di comunicazione per l'intero frontend.
+
+\begin{itemize}
+    \item \textbf{Natura:} Consiste in metodi statici che gestiscono le richieste AJAX (\code{\$.ajax}).
+    \item \textbf{Responsabilit\`a:}
+    \begin{itemize}
+        \item Gestisce il Token JWT (aggiungendo l'header \code{Authorization}).
+        \item Espone gli endpoint per Login, Registrazione, operazioni sui Libri (Get, Create, Update, Delete), Acquisti e Messaggistica.
+        \item \textbf{Astrazione:} Nasconde i dettagli HTTP sottostanti ai Presenter.
+    \end{itemize}
+\end{itemize}
+
+\subsection{AuthPresenter}
+
+\textbf{Ruolo:} Gestisce i flussi di Autenticazione Utente.
+
+\begin{itemize}
+    \item \textbf{Responsabilit\`a principali:}
+    \begin{itemize}
+        \item Ascolta i form di Login e Registrazione.
+        \item Chiama \code{ApiService.login()} e \code{ApiService.register()}.
+        \item \textbf{Gestione JWT:} Analizza il token JWT ricevuto per estrarre le informazioni utente (\code{parseJwt}) e lo memorizza nel \code{localStorage}.
+        \item Reindirizza l'utente alla dashboard in caso di successo.
+    \end{itemize}
+\end{itemize}
+
+\subsection{BooksPresenter}
+
+\textbf{Ruolo:} Controller principale per l'interfaccia del Marketplace dei Libri.
+
+\begin{itemize}
+    \item \textbf{Responsabilit\`a principali:}
+    \begin{itemize}
+        \item \textbf{Dashboard:} Recupera e renderizza tutti i libri specifici (\code{fetchBooks}, \code{renderBooks}).
+        \item \textbf{Filtri:} Implementa la logica di filtraggio (Strategy Pattern con \code{CompositeFilter}, \code{GeneralSearchFilter}, ecc.) per cercare libri per titolo, ISBN, docente o corso.
+        \item \textbf{I Miei Libri:} Visualizza i libri appartenenti all'utente loggato (\code{handleMyBooks}).
+        \item \textbf{Operazioni CRUD:} Gestisce la creazione (\code{handleInsertAd}), l'aggiornamento del prezzo (\code{handleEditBook}) e l'eliminazione (\code{handleDeleteBook}) degli annunci.
+        \item \textbf{Commercio:} Gestisce il processo di acquisto (\code{handleBuyBook}) e visualizza lo Storico Acquisti (\code{renderPurchases}) e lo Storico Vendite (\code{renderSales}).
+        \item \textbf{Navigazione:} Gestisce il menu dropdown utente incluso il logout.
+    \end{itemize}
+\end{itemize}
+
+\subsection{ChatPresenter}
+
+\textbf{Ruolo:} Gestisce il Sistema di Messaggistica.
+
+\begin{itemize}
+    \item \textbf{Responsabilit\`a principali:}
+    \begin{itemize}
+        \item \textbf{Conversazioni:} Recupera e lista le conversazioni attive (\code{fetchConversations}).
+        \item \textbf{Messaggistica:} Visualizza lo storico chat (\code{renderMessages}) e invia nuovi messaggi (\code{sendMessage}).
+        \item \textbf{Deep Links:} Gestisce i parametri URL (es. \code{?userId=X}) per aprire una chat specifica direttamente dalla card di un libro.
+        \item \textbf{Aggiornamenti UI:} Formatta i timestamp e distingue tra messaggi inviati e ricevuti.
+    \end{itemize}
+\end{itemize}
+
+\subsection{User (Model)}
+
+\textbf{Ruolo:} Semplice Data Transfer Object (DTO).
+
+\begin{itemize}
+    \item \textbf{Responsabilit\`a:}
+    \begin{itemize}
+        \item Incapsula i dati di registrazione utente (\code{username}, \code{email}, \code{password}) prima dell'invio all'API.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Relazioni}
+
+\begin{itemize}
+    \item \textbf{Dipendenza:} Tutti i Presenter (\code{AuthPresenter}, \code{BooksPresenter}, \code{ChatPresenter}) dipendono da \code{ApiService} per eseguire le operazioni di rete.
+    \item \textbf{Associazione:} \code{AuthPresenter} utilizza la classe \code{User} per strutturare i dati di registrazione.
+    \item \textbf{Flusso:}
+    \begin{enumerate}
+        \item \code{BooksPresenter} (Book Card) $\rightarrow$ Richiesta alla Chat (\code{window.location.href}).
+        \item \code{ChatPresenter} si inizializza $\rightarrow$ Controlla i parametri URL $\rightarrow$ Apre la Conversazione.
+    \end{enumerate}
+\end{itemize}

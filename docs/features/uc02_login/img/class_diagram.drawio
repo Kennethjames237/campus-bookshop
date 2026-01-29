@@ -1,0 +1,50 @@
+<mxfile host="65bd71144e">
+    <diagram id="class-diagram" name="Class Diagram">
+        <mxGraphModel dx="736" dy="446" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-10" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;/p&gt;&lt;span style=&quot;font-weight: 700;&quot;&gt;&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;AuthPresenter&lt;/span&gt;&lt;/div&gt;&lt;/span&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- loginForm: HTMLElement&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;- registerForm: HTMLElement&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;- alertPlaceholder: HTMLElement&lt;/p&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;+ init(): void&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;+ handleLogin(event): void&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;+ handleRegister(event): void&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;+ showAlert(msg , type): void&lt;span style=&quot;&quot;&gt;&lt;/span&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="810" width="200" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-11" value="&lt;p style=&quot;text-align: center; margin: 4px 0px 0px;&quot;&gt;&lt;b&gt;User&lt;/b&gt;&lt;/p&gt;&lt;hr style=&quot;text-align: center;&quot; size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ username: String&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;+ email: String&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;+password: String&amp;nbsp;&lt;/p&gt;&lt;br&gt;&lt;hr size=&quot;1&quot;&gt;+toJSON(): Object&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="585" width="220" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-12" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ApiService&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ login(email , password):Promise&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;+ register(user: User): Promise&lt;br&gt;+ getBooks(filters): Promise&lt;br&gt;+ createBook(bookData): Promise&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;- _send(method , endpoint, data): Promise&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="595" width="270" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-13" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;MockServer&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ init(): void&lt;br&gt;+ request(method, endpoint, body): Promise&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="880" width="240" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-16" value="&amp;lt;&amp;lt;usa&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.457;entryY=0.999;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="LpVkIuEMcSpGwjUjQKiX-10" target="LpVkIuEMcSpGwjUjQKiX-11" edge="1">
+                    <mxGeometry x="0.0476" y="30" width="160" relative="1" as="geometry">
+                        <mxPoint x="270" y="780" as="sourcePoint"/>
+                        <mxPoint x="430" y="780" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-20" value="&amp;lt;&amp;lt;usa&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.387;entryY=1.03;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="LpVkIuEMcSpGwjUjQKiX-10" target="LpVkIuEMcSpGwjUjQKiX-12" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="420" y="680" as="sourcePoint"/>
+                        <mxPoint x="580" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="LpVkIuEMcSpGwjUjQKiX-23" value="&amp;lt;&amp;lt;HTTP/JSON&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=block;endFill=1;dashed=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="LpVkIuEMcSpGwjUjQKiX-12" target="LpVkIuEMcSpGwjUjQKiX-13" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="420" y="770" as="sourcePoint"/>
+                        <mxPoint x="580" y="770" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="new-books-presenter" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;BooksPresenter&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- books: Array&lt;br&gt;- renderTarget: HTMLElement&lt;br&gt;- welcomeMessage: HTMLElement&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ init(): void&lt;br&gt;+ fetchBooks(): void&lt;br&gt;+ renderBooks(): void&lt;br&gt;+ handleInsertAd(): void&lt;br&gt;+ handleLogout(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="350" width="220" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel-books-api" value="&amp;lt;&amp;lt;use&amp;gt;&amp;gt;" style="html=1;verticalAlign=bottom;labelBackgroundColor=none;endArrow=open;endFill=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" parent="1" source="new-books-presenter" target="LpVkIuEMcSpGwjUjQKiX-12" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="sourcePoint"/>
+                        <mxPoint as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

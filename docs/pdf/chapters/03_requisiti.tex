@@ -1,0 +1,133 @@
+% =============================================================================
+% CHAPTER 3: ANALISI DEI REQUISITI
+% =============================================================================
+
+\chapter{Analisi dei Requisiti}
+
+\textbf{Scopo del Progetto:} Applicazione Web per la compravendita di libri universitari.
+
+\begin{itemize}
+    \item Non verr\`a implementato un sistema di pagamento.
+    \item Non verr\`a implementato un meccanismo di password recovery.
+    \item La gestione per accordarsi sul prezzo, su un diverso pagamento e sulla consegna del libro, sono attualmente lasciate alla gestione tra utenti.
+\end{itemize}
+
+\section{Requisiti Non Funzionali}
+
+\begin{itemize}
+    \item \textbf{RNF01:} Implementazione dell'architettura attraverso il pattern Model-View-Presenter (MVP).
+    \item \textbf{RNF02:} Backend implementato in PHP puro.
+    \item \textbf{RNF03:} Frontend implementato in HTML, CSS e Javascript.
+    \item \textbf{RNF04:} Il frontend comunica con il backend solo tramite API RESTful CRUD.
+    \item \textbf{RNF05:} Il Backend non deve generare codice HTML.
+    \item \textbf{RNF06:} Le password non devono essere salvate in chiaro.
+\end{itemize}
+
+\section{Requisiti Funzionali}
+
+\begin{itemize}
+    \item \textbf{RF01:} Login e Registrazione degli utenti.
+    \item \textbf{RF02:} Visualizzazione lista libri.
+    \item \textbf{RF03:} Caricamento annuncio.
+    \item \textbf{RF04:} Acquisto diretto.
+    \item \textbf{RF05:} Ricerca avanzata per ISBN, corso, docente.
+    \item \textbf{RF06:} Messaggistica tra utenti.
+\end{itemize}
+
+\section{Attori di Sistema Principali}
+
+\subsection{Visitatore}
+Utente non autenticato, pu\`o:
+\begin{enumerate}
+    \item Visualizzare tutti gli annunci.
+    \item Effettuare il login.
+    \item Effettuare la registrazione.
+\end{enumerate}
+
+\subsection{Utente}
+Utente autenticato, pu\`o:
+\begin{enumerate}
+    \item Visualizzare annunci pubblicati da altri.
+    \item Aggiungere, modificare e rimuovere i propri annunci.
+    \item Visualizzare lo storico dei libri venduti.
+    \item Visualizzare lo storico degli acquisti.
+    \item Effettuare il logout.
+\end{enumerate}
+
+\section{User Stories}
+
+\subsection{[US01] Registrazione Utente}
+\begin{quote}
+\textbf{Come} Visitatore,\\
+\textbf{Voglio} registrarmi,\\
+\textbf{Affinch\'e} il sistema mi permetta di accedere.
+\end{quote}
+\textbf{Analisi:} UC01 (Capitolo \ref{chap:usecases})
+
+\subsection{[US02] Login Utente}
+\begin{quote}
+\textbf{Come} Visitatore,\\
+\textbf{Voglio} effettuare il login,\\
+\textbf{Affinch\'e} il sistema mi permetta di compiere operazioni.
+\end{quote}
+\textbf{Analisi:} UC02 (Capitolo \ref{chap:usecases})
+
+\subsection{[US03] Visualizzazione}
+\begin{quote}
+\textbf{Come} Utente o Visitatore,\\
+\textbf{Voglio} vedere la lista dei libri (esclusi i miei),\\
+\textbf{Affinch\'e} possa trovare testi da acquistare.
+\end{quote}
+\textbf{Analisi:} UC03 (Capitolo \ref{chap:usecases})
+
+\subsection{[US04] Pubblicazione Annuncio}
+\begin{quote}
+\textbf{Come} Utente,\\
+\textbf{Voglio} caricare un libro (Titolo, Prezzo, Foto, ISBN, Docente, Corso),\\
+\textbf{Affinch\'e} sia visibile e acquistabile dagli altri utenti.
+\end{quote}
+\textbf{Analisi:} UC04 (Capitolo \ref{chap:usecases})
+
+\subsection{[US05] Acquisto Diretto}
+\begin{quote}
+\textbf{Come} Utente,\\
+\textbf{Voglio} poter acquistare un libro,\\
+\textbf{Affinch\'e} il libro vada nello storico dei miei acquisiti, nello storico annunci del venditore e sparisca dalla bacheca.
+\end{quote}
+\textbf{Analisi:} UC05 (Capitolo \ref{chap:usecases})
+
+\subsection{[US06] Ricerca Avanzata}
+\begin{quote}
+\textbf{Come} Utente o Visitatore,\\
+\textbf{Voglio} poter cercare libri per ISBN, corso o docente,\\
+\textbf{Affinch\'e} possa trovare rapidamente i testi di mio interesse.
+\end{quote}
+\textbf{Analisi:} UC06 (Capitolo \ref{chap:usecases})
+
+\subsection{[US07] Messaggistica tra Utenti}
+\begin{quote}
+\textbf{Come} Utente,\\
+\textbf{Voglio} poter inviare e ricevere messaggi da altri utenti,\\
+\textbf{Affinch\'e} possa accordarmi su prezzo e consegna dei libri.
+\end{quote}
+\textbf{Analisi:} UC07 (Capitolo \ref{chap:usecases})
+
+\section{Matrice di Tracciabilit\`a}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccccc}
+\toprule
+ & \textbf{RF01} & \textbf{RF02} & \textbf{RF03} & \textbf{RF04} & \textbf{RF05} & \textbf{RF06} \\
+\midrule
+UC01 & X &   &   &   &   &   \\
+UC02 & X &   &   &   &   &   \\
+UC03 &   & X &   &   &   &   \\
+UC04 &   &   & X &   &   &   \\
+UC05 &   &   &   & X &   &   \\
+UC06 &   &   &   &   & X &   \\
+UC07 &   &   &   &   &   & X \\
+\bottomrule
+\end{tabular}
+\caption{Matrice di Tracciabilit\`a Use Cases - Requisiti Funzionali}
+\end{table}

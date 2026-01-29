@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /
+
+# Default page: redirect / to books
+RewriteRule ^$ /view/books.html [L]
+
+# Clean URLs: /books -> /view/books.html, etc.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(books|login|register|chat)$ /view/$1.html [L]

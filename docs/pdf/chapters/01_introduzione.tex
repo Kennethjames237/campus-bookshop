@@ -1,0 +1,57 @@
+% =============================================================================
+% CHAPTER 1: INTRODUZIONE
+% =============================================================================
+
+\chapter{Introduzione}
+
+\section{Il Team}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Studente} & \textbf{Matricola} & \textbf{Ruolo Principale} \\
+\midrule
+Andrea Belli & 361054 & Database \\
+Nna Minkousse Kenneth James & 366361 & Frontend \\
+Samuele Premori & 361939 & Backend \\
+\bottomrule
+\end{tabular}
+\caption{Composizione del Team T24}
+\end{table}
+
+\section{Quick Start}
+
+\begin{enumerate}
+    \item \textbf{Clonare il repository}
+    
+    \item \textbf{Configurare l'ambiente}
+    \begin{lstlisting}[style=bashStyle]
+cp .env.example .env
+    \end{lstlisting}
+    
+    \item \textbf{Avviare i container}
+    \begin{lstlisting}[style=bashStyle]
+docker-compose up -d
+    \end{lstlisting}
+    
+    \item \textbf{Accedere all'applicazione}
+    \begin{itemize}
+        \item Frontend: \url{http://localhost:8080}
+        \item Backend API: \url{http://localhost:8081}
+    \end{itemize}
+\end{enumerate}
+
+\section{Gestione Dati e Database}
+
+\begin{itemize}
+    \item \textbf{Rimuovere il Volume:}
+    \begin{lstlisting}[style=bashStyle]
+docker-compose down -v
+    \end{lstlisting}
+    
+    \item \textbf{Avvio Build forzata Immagine:}
+    \begin{lstlisting}[style=bashStyle]
+docker-compose up -d --build
+    \end{lstlisting}
+\end{itemize}

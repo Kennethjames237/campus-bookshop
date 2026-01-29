@@ -1,0 +1,99 @@
+<mxfile host="65bd71144e">
+    <diagram id="UC07_Activity" name="Message Process">
+        <mxGraphModel dx="1068" dy="814" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="start" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="20" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="viewBook" value="View Book" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="355" y="100" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge1" parent="1" source="start" target="viewBook" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="clickContatta" value="Click 'Contatta'" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="170" width="100" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="checkAuth" value="Is Logged In?" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="200" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge2" parent="1" source="viewBook" target="checkAuth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="login" value="Login Page" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeNo" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="checkAuth" target="login" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeYes" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="checkAuth" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="420" y="350" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="parseUrl" value="Parse URL Params" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="350" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="fetchConv" value="Fetch Conversations" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="430" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_c1" parent="1" source="parseUrl" target="fetchConv" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hasUserId" value="Has userId?" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="510" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_c2" parent="1" source="fetchConv" target="hasUserId" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="selectConv" value="Select Conversation" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="630" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_yes" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="hasUserId" target="selectConv" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="340" y="550"/>
+                            <mxPoint x="340" y="630"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="showInbox" value="Show Inbox (Empty)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="630" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_no" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="hasUserId" target="showInbox" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="510" y="550"/>
+                            <mxPoint x="510" y="630"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fetchMsg" value="Fetch Messages (API)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="710" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_c3" parent="1" source="selectConv" target="fetchMsg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="render" value="Render Chat UI" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="790" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_c4" parent="1" source="fetchMsg" target="render" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_c5" parent="1" source="showInbox" target="render" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_c6" parent="1" source="render" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="420" y="869.9999999999998" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="endChat" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="1" vertex="1">
+                    <mxGeometry x="405" y="870" width="30" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

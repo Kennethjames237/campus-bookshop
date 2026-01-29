@@ -1,0 +1,155 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.4">
+  <diagram id="uc07-activity" name="Activity Diagram - UC07 Messaggistica">
+    <mxGraphModel dx="1426" dy="817" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;" value="Activity Diagram - UC07: Messaggistica tra Utenti" vertex="1">
+          <mxGeometry height="30" width="400" x="350" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_user" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;startSize=30;" value="Utente" vertex="1">
+          <mxGeometry height="880" width="450" x="50" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Seleziona&#xa;conversazione esistente" vertex="1">
+          <mxGeometry height="50" width="160" x="205" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="lane_user" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="205" y="805" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_d1_a1" parent="lane_user" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;" value="Da annuncio" vertex="1">
+          <mxGeometry height="20" width="80" x="90" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_d1_a2" parent="lane_user" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;" value="Da menu" vertex="1">
+          <mxGeometry height="20" width="60" x="290" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_system" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;startSize=30;" value="Sistema" vertex="1">
+          <mxGeometry height="880" width="450" x="500" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Mostra lista conversazioni&#xa;con ultimo messaggio" vertex="1">
+          <mxGeometry height="50" width="200" x="120" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="s_err" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Mostra errore:&#xa;&quot;Messaggio vuoto&quot;" vertex="1">
+          <mxGeometry height="50" width="140" x="230" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="255" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Come accede&#xa;alla messaggistica?" vertex="1">
+          <mxGeometry height="80" width="160" x="195" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Clicca &quot;Contatta&#xa;Venditore&quot; da annuncio" vertex="1">
+          <mxGeometry height="50" width="160" x="100" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Accede alla&#xa;sezione Messaggi" vertex="1">
+          <mxGeometry height="50" width="160" x="290" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="GET /conversations&#xa;Carica lista conversazioni" vertex="1">
+          <mxGeometry height="50" width="200" x="620" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="GET /messages?userId=X&#xa;Carica storico messaggi" vertex="1">
+          <mxGeometry height="50" width="200" x="620" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Mostra messaggi&#xa;in ordine cronologico" vertex="1">
+          <mxGeometry height="50" width="200" x="620" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Scrive messaggio&#xa;nel campo di testo" vertex="1">
+          <mxGeometry height="50" width="160" x="195" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Clicca &quot;Invia&quot;" vertex="1">
+          <mxGeometry height="40" width="160" x="195" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="d3" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Messaggio&#xa;vuoto?" vertex="1">
+          <mxGeometry height="80" width="120" x="660" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="POST /messages&#xa;Salva messaggio nel DB" vertex="1">
+          <mxGeometry height="50" width="200" x="620" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Aggiorna conversazione&#xa;con nuovo messaggio" vertex="1">
+          <mxGeometry height="50" width="200" x="620" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_start_d1" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="d1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_d1_a1" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="a1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_d1_a2" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="a2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_a2_s1" edge="1" parent="1" source="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s1_s2" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s2_a3" edge="1" parent="1" source="s2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="a3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_a1_s3" edge="1" parent="1" source="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_a3_s3" edge="1" parent="1" source="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="430" />
+              <mxPoint x="720" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_s3_s4" edge="1" parent="1" source="s3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s4_a4" edge="1" parent="1" source="s4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="a4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_a4_a5" edge="1" parent="1" source="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="a5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_a5_d3" edge="1" parent="1" source="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="d3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_d3_err" edge="1" parent="1" source="lbl_d3_err" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s_err">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_err_a4" edge="1" parent="1" source="s_err" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" target="a4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="635" />
+              <mxPoint x="730" y="635" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_d3_s5" edge="1" parent="1" source="d3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_d3_s5" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;" value="No" vertex="1">
+          <mxGeometry height="20" width="30" x="690" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s5_s6" edge="1" parent="1" source="s5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="s6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_s6_end" edge="1" parent="1" source="s6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zURK4XukcZFczYSrS1Dq-1" edge="1" parent="1" source="d3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="lbl_d3_err" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="710" />
+            </Array>
+            <mxPoint x="780" y="710" as="sourcePoint" />
+            <mxPoint x="800" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_d3_err" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;" value="Si" vertex="1">
+          <mxGeometry height="20" width="30" x="785" y="680" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

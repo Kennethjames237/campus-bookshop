@@ -1,0 +1,54 @@
+% =============================================================================
+% MAIN DOCUMENT - UniprBooks Documentation
+% =============================================================================
+% Progetto 6: UniprBooks - Mercatino Libri Usati UNIPR
+% Corso di Ingegneria del Software 2025/2026
+% Team T24
+% =============================================================================
+
+\documentclass[11pt,a4paper]{report}
+
+% -----------------------------------------------------------------------------
+% CONFIGURATION
+% -----------------------------------------------------------------------------
+\input{config/packages}
+\input{config/settings}
+
+% -----------------------------------------------------------------------------
+% DOCUMENT
+% -----------------------------------------------------------------------------
+\begin{document}
+
+% --- Title Page ---
+\input{config/titlepage}
+
+% --- Table of Contents ---
+\tableofcontents
+\newpage
+
+% -----------------------------------------------------------------------------
+% CHAPTERS
+% -----------------------------------------------------------------------------
+
+% Chapter 1: Introduzione
+\input{chapters/01_introduzione}
+
+% Chapter 2: Processo di Sviluppo
+\input{chapters/02_processo}
+
+% Chapter 3: Analisi dei Requisiti
+\input{chapters/03_requisiti}
+
+% Chapter 4: Architettura del Sistema
+\input{chapters/04_architettura}
+
+% Chapter 5: Contratti di Interfaccia
+\input{chapters/05_contratti}
+
+% Chapter 6: Sprint Log
+\input{chapters/06_sprintlog}
+
+% Chapter 7: Use Cases
+\input{chapters/07_usecases}
+
+\end{document}

@@ -1,0 +1,196 @@
+<mxfile host="app.diagrams.net">
+    <diagram id="uc05-backend-flowchart" name="Backend Flowchart - POST /purchase">
+        <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1400" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                
+                <!-- Title -->
+                <mxCell id="title" value="Backend Flowchart - POST /purchase" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="20" width="300" height="30" as="geometry"/>
+                </mxCell>
+                
+                <!-- Start -->
+                <mxCell id="start" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="70" width="50" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- Step 1: Receive request -->
+                <mxCell id="step1" value="Ricevi POST /purchase&#xa;{ bookId }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="150" width="200" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- Step 2: Validate JWT -->
+                <mxCell id="step2" value="AuthMiddleware:&#xa;Valida Token JWT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="230" width="200" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- Decision 1: Token valid? -->
+                <mxCell id="dec1" value="Token&#xa;valido?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="310" width="120" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Error 1: Unauthorized -->
+                <mxCell id="err1" value="401 Unauthorized" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="325" width="140" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Step 3: Extract buyer_id -->
+                <mxCell id="step3" value="Estrai buyer_id&#xa;dal JWT (sub claim)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="420" width="200" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- Decision 2: bookId valid? -->
+                <mxCell id="dec2" value="bookId&#xa;valido?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="500" width="120" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Error 2: Invalid input -->
+                <mxCell id="err2" value="400 Invalid input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="515" width="140" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Step 4: Get book -->
+                <mxCell id="step4" value="DatabaseInterface:&#xa;getBookById(bookId)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="610" width="200" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- Decision 3: Book found? -->
+                <mxCell id="dec3" value="Libro&#xa;trovato?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="690" width="120" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Error 3: Book not found -->
+                <mxCell id="err3" value="404 Book not found" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="705" width="140" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Decision 4: Available? -->
+                <mxCell id="dec4" value="available&#xa;== true?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="800" width="120" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Error 4: Already sold -->
+                <mxCell id="err4" value="409 Book already sold" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="815" width="140" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Decision 5: Not self-purchase? -->
+                <mxCell id="dec5" value="buyer_id !=&#xa;seller_id?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="910" width="120" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Error 5: Self purchase -->
+                <mxCell id="err5" value="403 Cannot purchase&#xa;your own book" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="920" width="150" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- Step 5: Place order -->
+                <mxCell id="step5" value="DatabaseInterface:&#xa;placeOrder(bookId, buyerId)&#xa;Crea Transaction + available=false" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="1020" width="240" height="60" as="geometry"/>
+                </mxCell>
+                
+                <!-- Step 6: Get seller email -->
+                <mxCell id="step6" value="DatabaseInterface:&#xa;getUserById(sellerId)&#xa;Ottieni sellerEmail" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="1110" width="240" height="60" as="geometry"/>
+                </mxCell>
+                
+                <!-- Success response -->
+                <mxCell id="success" value="200 OK&#xa;{ status: success,&#xa;  orderId, sellerEmail }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1200" width="200" height="60" as="geometry"/>
+                </mxCell>
+                
+                <!-- End -->
+                <mxCell id="end" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="1290" width="50" height="50" as="geometry"/>
+                </mxCell>
+                
+                <!-- ARROWS - Main flow -->
+                <mxCell id="a1" parent="1" source="start" target="step1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2" parent="1" source="step1" target="step2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3" parent="1" source="step2" target="dec1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a4" value="Si" parent="1" source="dec1" target="step3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a5" parent="1" source="step3" target="dec2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6" value="Si" parent="1" source="dec2" target="step4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a7" parent="1" source="step4" target="dec3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a8" value="Si" parent="1" source="dec3" target="dec4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a9" value="Si" parent="1" source="dec4" target="dec5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a10" value="Si" parent="1" source="dec5" target="step5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a11" parent="1" source="step5" target="step6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a12" parent="1" source="step6" target="success" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a13" parent="1" source="success" target="end" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- ARROWS - Error paths (horizontal to errors) -->
+                <mxCell id="e1" value="No" parent="1" source="dec1" target="err1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" value="No" parent="1" source="dec2" target="err2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" value="No" parent="1" source="dec3" target="err3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" value="No" parent="1" source="dec4" target="err4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="No" parent="1" source="dec5" target="err5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- ARROWS - Errors to End -->
+                <mxCell id="ee1" parent="1" source="err1" target="end" edge="1" style="dashed=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"><mxPoint x="750" y="345"/><mxPoint x="750" y="1315"/></Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ee2" parent="1" source="err2" target="end" edge="1" style="dashed=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"><mxPoint x="750" y="535"/><mxPoint x="750" y="1315"/></Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ee3" parent="1" source="err3" target="end" edge="1" style="dashed=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"><mxPoint x="750" y="725"/><mxPoint x="750" y="1315"/></Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ee4" parent="1" source="err4" target="end" edge="1" style="dashed=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"><mxPoint x="750" y="835"/><mxPoint x="750" y="1315"/></Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ee5" parent="1" source="err5" target="end" edge="1" style="dashed=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"><mxPoint x="750" y="945"/><mxPoint x="750" y="1315"/></Array>
+                    </mxGeometry>
+                </mxCell>
+                
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

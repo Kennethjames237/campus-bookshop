@@ -1,0 +1,774 @@
+% =============================================================================
+% CHAPTER 7: USE CASES
+% =============================================================================
+
+\chapter{Use Cases}
+\label{chap:usecases}
+
+% =============================================================================
+% UC01 - REGISTRAZIONE UTENTE
+% =============================================================================
+\section{UC01 - Registrazione Utente}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un visitatore di creare un nuovo account nel sistema, permettendogli successivamente di accedere alle funzionalit\`a riservate.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Visitatore \\
+\textbf{Pre-condizioni} & Il visitatore non \`e autenticato e si trova nella pagina di registrazione \\
+\textbf{Post-condizioni} & L'account \`e creato nel DB e il visitatore pu\`o fare login \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.6\textwidth]{uc01_registration/img/uc01.drawio}
+    \caption{Use Case Diagram - UC01 Registrazione}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item Il \textbf{Visitatore} accede alla pagina di registrazione.
+    \item Il sistema mostra il modulo (Nome, Email, Password).
+    \item Il \textbf{Visitatore} compila i campi e conferma.
+    \item Il sistema verifica che l'email non sia gi\`a registrata.
+    \item Il sistema valida il formato dei dati (es. password strong).
+    \item Il sistema crea il nuovo account nel database.
+    \item Il sistema reindirizza al login con messaggio di successo.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Email gi\`a registrata}
+\begin{enumerate}
+    \item Il sistema rileva che l'email esiste.
+    \item Il sistema mostra errore: ``Email gi\`a in uso''.
+    \item Il flusso termina (l'utente deve riprovare).
+\end{enumerate}
+
+\textbf{A2: Dati non validi}
+\begin{enumerate}
+    \item Il sistema rileva formato errato.
+    \item Il sistema evidenzia i campi in rosso.
+    \item L'utente corregge e si torna al passo 3.
+\end{enumerate}
+
+\subsection{Activity Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc01_registration/img/uc01_flowchart.drawio}
+    \caption{Activity Diagram - UC01 Registrazione}
+\end{figure}
+
+\subsection{Criteri di Accettazione e Testing}
+
+\begin{itemize}
+    \item La password deve avere almeno 8 caratteri.
+    \item Se la registrazione ha successo, l'utente non viene loggato automaticamente ma va al login.
+    \item La mail deve contenere ``@'' e un dominio valido.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llll}
+\toprule
+\textbf{ID Test} & \textbf{Azione} & \textbf{Risultato Atteso} & \textbf{Valida} \\
+\midrule
+T01 & Invia form vuoto & Bordi rossi sui campi & $\checkmark$ \\
+T02 & Invia mail esistente & Messaggio errore specifico & $\checkmark$ \\
+T03 & Invia dati corretti & Redirect a /login & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC01}
+\end{table}
+
+\subsection{Specifiche Tecniche}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc01_registration/img/uc01_sequence.drawio}
+    \caption{Sequence Diagram - UC01}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc01_registration/img/auth_class.drawio}
+    \caption{Class Diagram Backend - Autenticazione}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc01_registration/img/uc01_backend_flowchart.drawio}
+    \caption{Backend Flowchart - UC01}
+\end{figure}
+
+% =============================================================================
+% UC02 - LOGIN UTENTE
+% =============================================================================
+\section{UC02 - Login Utente}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un visitatore registrato di autenticarsi nel sistema per accedere alle funzionalit\`a riservate agli utenti (come la pubblicazione di annunci o l'acquisto).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Visitatore (Registrato) \\
+\textbf{Pre-condizioni} & Il visitatore possiede un account e non \`e gi\`a autenticato \\
+\textbf{Post-condizioni} & Il sistema crea una sessione/token e l'utente viene autenticato \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.6\textwidth]{uc02_login/img/uc02.drawio}
+    \caption{Use Case Diagram - UC02 Login}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item Il \textbf{Visitatore} accede alla pagina di login.
+    \item Il sistema mostra il modulo (Email e Password).
+    \item Il \textbf{Visitatore} inserisce le proprie credenziali e conferma.
+    \item Il sistema valida il formato dei dati (lato Frontend).
+    \item Il sistema verifica la corrispondenza delle credenziali nel database (lato Backend).
+    \item Il sistema genera un token di sessione.
+    \item Il sistema reindirizza l'utente alla Dashboard/Home con messaggio di successo.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Credenziali errate o Account inesistente}
+\begin{enumerate}
+    \item Il sistema rileva che l'email non esiste o la password \`e errata.
+    \item Il sistema mostra un messaggio di errore generico: ``Email o password non corretti''.
+    \item Il flusso riprende dal punto 3.
+\end{enumerate}
+
+\begin{nota}
+Si usa un messaggio generico per evitare che malintenzionati scoprano quali email sono registrate.
+\end{nota}
+
+\textbf{A2: Formato dati non valido}
+\begin{enumerate}
+    \item Il sistema rileva che la mail non \`e nel formato corretto o i campi sono vuoti.
+    \item Il sistema blocca l'invio e segnala i campi da correggere.
+\end{enumerate}
+
+\subsection{Activity Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc02_login/img/uc02_flowchart.drawio}
+    \caption{Activity Diagram - UC02 Login}
+\end{figure}
+
+\subsection{Criteri di Accettazione}
+
+\begin{itemize}
+    \item \textbf{Sicurezza:} Le password non devono mai apparire in chiaro nel modulo.
+    \item \textbf{Sessione:} Al login effettuato, il sistema deve memorizzare lo stato di ``Loggato''.
+    \item \textbf{Feedback:} In caso di errore, i campi non devono essere resettati per permettere la correzione veloce.
+\end{itemize}
+
+\subsection{Piano di Test Manuale}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{5cm}p{5cm}l}
+\toprule
+\textbf{ID} & \textbf{Azione} & \textbf{Risultato Atteso} & \textbf{Valida} \\
+\midrule
+T01 & Inserire email non registrata & Messaggio di errore generico & $\checkmark$ \\
+T02 & Inserire email corretta ma password errata & Messaggio di errore generico & $\checkmark$ \\
+T03 & Lasciare il campo password vuoto & Tasto ``Login'' disabilitato o errore & $\checkmark$ \\
+T04 & Inserire credenziali corrette & Reindirizzamento alla Home & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC02}
+\end{table}
+
+\subsection{Design Tecnico}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc02_login/img/uc02_sequence.drawio}
+    \caption{Sequence Diagram - UC02}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc02_login/img/uc02_backend_flowchart.drawio}
+    \caption{Backend Flowchart - UC02}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc02_login/img/jwt_lifecycle.drawio}
+    \caption{Ciclo di Vita JWT Token}
+\end{figure}
+
+% =============================================================================
+% UC03 - VISUALIZZAZIONE LISTA LIBRI
+% =============================================================================
+\section{UC03 - Visualizzazione Lista Libri}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un Visitatore o a un Utente Autenticato di consultare la bacheca degli annunci disponibili. Se l'utente \`e loggato, il sistema nasconde automaticamente i suoi annunci.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Visitatore, Utente Autenticato, Database Annunci \\
+\textbf{Pre-condizioni} & L'utente accede alla pagina ``Bacheca'' o ``Home'' \\
+\textbf{Post-condizioni} & Il sistema mostra i libri filtrati disponibili per l'acquisto \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc03_listing/img/uc03.drawio}
+    \caption{Use Case Diagram - UC03 Visualizzazione}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item L'\textbf{Utente/Visitatore} accede alla bacheca dei libri.
+    \item Il sistema (Presenter) richiede la lista degli annunci al Model (API).
+    \item Il sistema (Backend) recupera i libri dal database.
+    \item \textbf{Filtro Identit\`a:} Se l'utente \`e autenticato, il sistema esclude dalla lista gli annunci creati dall'utente stesso.
+    \item Il sistema mostra la lista ordinata (es. dal pi\`u recente) con: Titolo, Prezzo, Foto e Autore.
+    \item L'\textbf{Utente/Visitatore} visualizza i risultati.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Nessun libro disponibile}
+\begin{enumerate}
+    \item Il database non restituisce risultati.
+    \item Il sistema mostra un messaggio: ``Al momento non ci sono libri disponibili. Torna pi\`u tardi!''.
+\end{enumerate}
+
+\textbf{A2: Errore caricamento immagini}
+\begin{enumerate}
+    \item Se la foto di un annuncio non \`e reperibile, il sistema mostra un'immagine segnaposto (placeholder) di default.
+\end{enumerate}
+
+\subsection{Activity Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc03_listing/img/uc03_flowchart.drawio}
+    \caption{Activity Diagram - UC03 Visualizzazione}
+\end{figure}
+
+\subsection{Criteri di Accettazione}
+
+\begin{itemize}
+    \item La lista deve essere caricata in modo asincrono senza ricaricare la pagina.
+    \item L'utente non deve visualizzare i propri annunci nella lista.
+    \item Ogni annuncio deve mostrare chiaramente il prezzo.
+\end{itemize}
+
+\subsection{Piano di Test Manuale}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{4cm}p{5cm}l}
+\toprule
+\textbf{ID} & \textbf{Azione} & \textbf{Risultato Atteso} & \textbf{Valida} \\
+\midrule
+T01 & Accesso da Visitatore & Visualizzazione di tutti i libri nel DB & $\checkmark$ \\
+T02 & Accesso da Utente Loggato & I propri libri sono nascosti & $\checkmark$ \\
+T03 & Database vuoto & Messaggio ``Nessun libro disponibile'' & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC03}
+\end{table}
+
+\subsection{Design Tecnico}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc03_listing/img/uc03_sequence.drawio}
+    \caption{Sequence Diagram - UC03}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc03_listing/img/uc03_backend_flowchart.drawio}
+    \caption{Backend Flowchart - UC03}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc03_listing/img/books_class.drawio}
+    \caption{Class Diagram - Catalogo Libri}
+\end{figure}
+
+% =============================================================================
+% UC04 - PUBBLICAZIONE ANNUNCIO
+% =============================================================================
+\section{UC04 - Pubblicazione Annuncio}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un Utente Autenticato di inserire un nuovo annuncio di vendita per un libro, specificando dettagli accademici e caricando una fotografia.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Utente Autenticato (Venditore) \\
+\textbf{Pre-condizioni} & L'utente \`e loggato e si trova nel form di creazione annuncio \\
+\textbf{Post-condizioni} & L'annuncio \`e salvato nel DB e l'immagine \`e memorizzata sul server \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.6\textwidth]{uc04_adding/img/uc04.drawio}
+    \caption{Use Case Diagram - UC04 Pubblicazione}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item Il \textbf{Venditore} clicca su ``Pubblica Annuncio''.
+    \item Il sistema mostra il modulo di inserimento: Titolo, Autore, ISBN, Prezzo, Corso, Docente e Caricamento Foto.
+    \item Il \textbf{Venditore} compila i campi e seleziona un'immagine dal dispositivo.
+    \item Il sistema (Frontend) valida la presenza dei campi obbligatori e il formato numerico del prezzo.
+    \item Il sistema (Backend) riceve i dati, salva l'immagine nel filesystem e crea il record nel database.
+    \item Il sistema reindirizza l'utente alla propria area personale o alla bacheca.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Dati mancanti o Formato errato}
+\begin{enumerate}
+    \item Il sistema evidenzia i campi non validi (es. ISBN non numerico o prezzo negativo).
+    \item Il pulsante di invio viene disabilitato finch\'e i dati non sono corretti.
+\end{enumerate}
+
+\textbf{A2: Errore Caricamento Immagine}
+\begin{enumerate}
+    \item Il file caricato non \`e un'immagine o supera la dimensione massima.
+    \item Il sistema mostra l'errore: ``Formato file non supportato o file troppo grande''.
+\end{enumerate}
+
+\subsection{Activity Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc04_adding/img/uc04_flowchart.drawio}
+    \caption{Activity Diagram - UC04 Pubblicazione}
+\end{figure}
+
+\subsection{Criteri di Accettazione}
+
+\begin{itemize}
+    \item Il campo ISBN deve accettare solo numeri (10 o 13 cifre).
+    \item Il prezzo deve essere obbligatoriamente un numero positivo.
+    \item L'utente deve poter caricare una foto.
+    \item L'annuncio deve essere collegato all'ID dell'utente che lo ha creato.
+\end{itemize}
+
+\subsection{Piano di Test Manuale}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{4cm}p{5cm}l}
+\toprule
+\textbf{ID} & \textbf{Azione} & \textbf{Risultato Atteso} & \textbf{Valida} \\
+\midrule
+T01 & Tentativo di invio con campi vuoti & Errore ``Campi obbligatori mancanti'' & $\checkmark$ \\
+T02 & Inserimento prezzo negativo & Errore di validazione sul campo prezzo & $\checkmark$ \\
+T03 & Caricamento file non immagine & Blocco del caricamento e avviso & $\checkmark$ \\
+T04 & Invio corretto dei dati & Successo e comparsa in bacheca & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC04}
+\end{table}
+
+\subsection{Design Tecnico}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc04_adding/img/uc04_sequence.drawio}
+    \caption{Sequence Diagram - UC04}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.6\textheight]{uc04_adding/img/uc04_backend_flowchart.drawio}
+    \caption{Backend Flowchart - UC04}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.55\textheight]{uc04_adding/img/image_upload_flow.drawio}
+    \caption{Flusso Upload Immagine}
+\end{figure}
+
+% =============================================================================
+% UC05 - ACQUISTO DIRETTO
+% =============================================================================
+\section{UC05 - Acquisto Diretto}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un Utente Autenticato di acquisire un libro. L'operazione \`e puramente logica (non c'\`e transazione monetaria reale): il libro sparisce dalla bacheca e viene spostato negli storici dei due utenti coinvolti.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Utente Autenticato (Acquirente) \\
+\textbf{Pre-condizioni} & L'acquirente \`e loggato e il libro ha stato ``Disponibile'' \\
+\textbf{Post-condizioni} & Libro impostato come ``Venduto'', rimosso dalla bacheca e aggiunto agli storici \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc05_buy/img/uc05.drawio}
+    \caption{Use Case Diagram - UC05 Acquisto}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item L'\textbf{Acquirente} visualizza i dettagli di un libro nella bacheca.
+    \item L'\textbf{Acquirente} clicca sul pulsante ``Acquista''.
+    \item Il sistema chiede conferma dell'operazione.
+    \item L'\textbf{Acquirente} conferma.
+    \item Il sistema (Backend) verifica che il libro sia ancora nello stato ``Disponibile''.
+    \item Il sistema crea un record nella tabella \code{transactions}.
+    \item Il sistema aggiorna lo stato del libro in \code{status = 'sold'}.
+    \item Il sistema mostra un messaggio di successo e fornisce i contatti del venditore.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Libro gi\`a venduto}
+\begin{enumerate}
+    \item Il sistema rileva che il libro \`e appena stato acquistato da un altro utente.
+    \item Il sistema mostra l'errore: ``Spiacenti, il libro \`e stato appena venduto''.
+    \item L'utente viene reindirizzato alla bacheca aggiornata.
+\end{enumerate}
+
+\textbf{A2: Tentativo di auto-acquisto}
+\begin{enumerate}
+    \item Il sistema rileva che l'acquirente \`e anche il venditore del libro.
+    \item Il pulsante ``Acquista'' \`e disabilitato o restituisce un errore di logica.
+\end{enumerate}
+
+\subsection{Activity Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.55\textheight]{uc05_buy/img/uc05_activity.drawio}
+    \caption{Activity Diagram - UC05 Acquisto}
+\end{figure}
+
+\subsection{Criteri di Accettazione}
+
+\begin{itemize}
+    \item Un libro venduto non deve comparire nei risultati di ricerca.
+    \item L'acquisto deve generare una voce nello storico ``Miei Acquisti'' dell'acquirente.
+    \item L'acquisto deve generare una voce nello storico ``Libri Venduti'' del venditore.
+    \item L'operazione deve essere atomica (se fallisce il salvataggio dello storico, il libro non deve risultare venduto).
+\end{itemize}
+
+\subsection{Piano di Test Manuale}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{4cm}p{5cm}}
+\toprule
+\textbf{ID} & \textbf{Azione} & \textbf{Risultato Atteso} \\
+\midrule
+T01 & Cliccare ``Acquista'' e poi ``Annulla'' & Nessuna modifica, libro resta disponibile \\
+T02 & Confermare l'acquisto & Successo, libro sparito dalla bacheca \\
+T03 & Verificare ``Storico Acquisti'' & Il libro appena comprato appare in cima \\
+T04 & Accesso diretto a libro gi\`a venduto & ``Libro non disponibile'' \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC05}
+\end{table}
+
+\subsection{Design Tecnico}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc05_buy/img/uc05_sequence.drawio}
+    \caption{Sequence Diagram - UC05}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.75\textheight]{uc05_buy/img/uc05_backend_flowchart.drawio}
+    \caption{Backend Flowchart - UC05}
+\end{figure}
+
+\textbf{Flusso di validazione:}
+\begin{enumerate}
+    \item \textbf{Autenticazione JWT:} Verifica che il token sia valido e non scaduto.
+    \item \textbf{Validazione Input:} Controllo presenza e formato del \code{bookId}.
+    \item \textbf{Esistenza Libro:} Verifica che il libro esista nel database.
+    \item \textbf{Disponibilit\`a:} Controllo che \code{book.available == true}.
+    \item \textbf{Anti Auto-Acquisto:} Verifica che \code{buyer\_id != seller\_id}.
+\end{enumerate}
+
+\textbf{Operazione Atomica:}
+La funzione \code{placeOrder()} esegue in una singola transazione database:
+\begin{itemize}
+    \item Creazione record nella tabella \code{transactions}.
+    \item Aggiornamento del campo \code{available = false} sul libro.
+\end{itemize}
+
+% =============================================================================
+% UC06 - RICERCA AVANZATA
+% =============================================================================
+\section{UC06 - Ricerca Avanzata}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un Utente o Visitatore di cercare libri nella bacheca filtrando per ISBN, corso o docente. La ricerca viene eseguita lato Frontend sui dati gi\`a caricati.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Visitatore, Utente Autenticato \\
+\textbf{Pre-condizioni} & La bacheca dei libri \`e stata caricata \\
+\textbf{Post-condizioni} & Vengono visualizzati solo i libri che corrispondono ai criteri \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.6\textwidth]{uc06_search/uc06}
+    \caption{Use Case Diagram - UC06 Ricerca}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item L'\textbf{Utente/Visitatore} visualizza la bacheca con tutti i libri disponibili.
+    \item L'\textbf{Utente/Visitatore} inserisce uno o pi\`u criteri di ricerca (ISBN, corso, docente).
+    \item Il sistema (Frontend) filtra i risultati in tempo reale.
+    \item Il sistema mostra solo i libri che corrispondono ai criteri inseriti.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Nessun risultato trovato}
+\begin{enumerate}
+    \item Nessun libro corrisponde ai criteri di ricerca.
+    \item Il sistema mostra un messaggio: ``Nessun libro trovato per i criteri selezionati''.
+\end{enumerate}
+
+\textbf{A2: Ricerca parziale}
+\begin{enumerate}
+    \item L'utente inserisce solo parte di un criterio (es. alcune cifre dell'ISBN).
+    \item Il sistema mostra tutti i libri che contengono la stringa parziale.
+\end{enumerate}
+
+\textbf{A3: Reset ricerca}
+\begin{enumerate}
+    \item L'utente svuota i campi di ricerca.
+    \item Il sistema mostra nuovamente tutti i libri disponibili.
+\end{enumerate}
+
+\subsection{Criteri di Accettazione}
+
+\begin{itemize}
+    \item La ricerca per ISBN deve restituire corrispondenze esatte o parziali.
+    \item La ricerca per corso deve essere case-insensitive.
+    \item La ricerca per docente deve essere case-insensitive.
+    \item \`E possibile combinare pi\`u criteri di ricerca contemporaneamente.
+    \item La ricerca deve funzionare sia per Visitatori che per Utenti autenticati.
+    \item Svuotando i campi di ricerca devono ricomparire tutti i libri.
+\end{itemize}
+
+\subsection{Piano di Test Manuale}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{4cm}p{5cm}l}
+\toprule
+\textbf{ID} & \textbf{Azione} & \textbf{Risultato Atteso} & \textbf{Valida} \\
+\midrule
+T01 & Inserire un ISBN completo & Solo il libro con quell'ISBN & $\checkmark$ \\
+T02 & Inserire un ISBN parziale & Libri il cui ISBN contiene quella sequenza & $\checkmark$ \\
+T03 & Inserire un nome corso esistente & Tutti i libri associati a quel corso & $\checkmark$ \\
+T04 & Inserire un nome docente & Tutti i libri associati a quel docente & $\checkmark$ \\
+T05 & Criteri senza corrispondenze & Messaggio ``Nessun libro trovato'' & $\checkmark$ \\
+T06 & Combinare ISBN + Corso & Solo libri che soddisfano entrambi & $\checkmark$ \\
+T07 & Svuotare tutti i campi & Tornano visibili tutti i libri & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC06}
+\end{table}
+
+\subsection{Design Tecnico}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc06_search/uc06_sequence}
+    \caption{Sequence Diagram - UC06}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc06_search/uc06_class.drawio}
+    \caption{Class Diagram - Strategy Pattern per i Filtri}
+\end{figure}
+
+% =============================================================================
+% UC07 - MESSAGGISTICA TRA UTENTI
+% =============================================================================
+\section{UC07 - Messaggistica tra Utenti}
+
+\subsection{Panoramica}
+
+\textbf{Descrizione:} Consente a un Utente Autenticato di inviare e ricevere messaggi diretti da altri utenti, per accordarsi su prezzo, pagamento e consegna dei libri.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attori} & Utente Autenticato (Mittente), Utente Autenticato (Destinatario) \\
+\textbf{Pre-condizioni} & Entrambi gli utenti sono registrati. Il mittente \`e autenticato \\
+\textbf{Post-condizioni} & Il messaggio \`e salvato nel DB e visibile al destinatario \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.7\textwidth]{uc07_messaging/img/uc07.drawio}
+    \caption{Use Case Diagram - UC07 Messaggistica}
+\end{figure}
+
+\subsection{Flussi di Eventi}
+
+\subsubsection{Flusso Principale}
+\begin{enumerate}
+    \item L'\textbf{Utente} accede alla sezione messaggi o clicca ``Contatta venditore'' da un annuncio.
+    \item Il sistema mostra la lista delle conversazioni esistenti o apre una nuova conversazione.
+    \item L'\textbf{Utente} scrive un messaggio nel campo di testo.
+    \item L'\textbf{Utente} clicca su ``Invia''.
+    \item Il sistema (Backend) salva il messaggio nel database con mittente, destinatario e timestamp.
+    \item Il sistema aggiorna la conversazione mostrando il nuovo messaggio.
+\end{enumerate}
+
+\subsubsection{Flussi Alternativi}
+
+\textbf{A1: Messaggio vuoto}
+\begin{enumerate}
+    \item L'utente tenta di inviare un messaggio senza contenuto.
+    \item Il sistema disabilita il pulsante ``Invia'' o mostra un errore.
+\end{enumerate}
+
+\textbf{A2: Destinatario non trovato}
+\begin{enumerate}
+    \item Il sistema non trova l'utente destinatario (es. account eliminato).
+    \item Il sistema mostra l'errore: ``Impossibile inviare il messaggio. Utente non trovato''.
+\end{enumerate}
+
+\textbf{A3: Visualizzazione nuovi messaggi}
+\begin{enumerate}
+    \item L'utente accede alla sezione messaggi.
+    \item Il sistema evidenzia le conversazioni con messaggi non letti.
+\end{enumerate}
+
+\subsection{Activity Diagram}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.55\textheight]{uc07_messaging/img/uc07_flowchart.drawio}
+    \caption{Activity Diagram - UC07 Messaggistica}
+\end{figure}
+
+\subsection{Criteri di Accettazione}
+
+\begin{itemize}
+    \item Solo gli utenti autenticati possono inviare e ricevere messaggi.
+    \item Ogni messaggio deve essere associato a un mittente e un destinatario.
+    \item I messaggi devono essere ordinati cronologicamente nella conversazione.
+    \item L'utente deve poter visualizzare lo storico dei messaggi con un altro utente.
+    \item I messaggi non letti devono essere evidenziati o contrassegnati.
+    \item Non \`e possibile inviare messaggi a se stessi.
+\end{itemize}
+
+\subsection{Piano di Test Manuale}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{4cm}p{6cm}}
+\toprule
+\textbf{ID} & \textbf{Azione} & \textbf{Risultato Atteso} \\
+\midrule
+T01 & Inviare un messaggio a un altro utente & Il messaggio appare nella conversazione di entrambi \\
+T02 & Tentativo di invio messaggio vuoto & Pulsante ``Invia'' disabilitato o errore \\
+T03 & Accedere con messaggi non letti & I messaggi non letti sono evidenziati \\
+T04 & Visualizzare lo storico di una conversazione & Tutti i messaggi in ordine cronologico \\
+T05 & Tentativo da utente non autenticato & Redirect alla pagina di login \\
+T06 & Contattare venditore da un annuncio & Si apre la conversazione con il venditore \\
+\bottomrule
+\end{tabular}
+\caption{Piano di Test - UC07}
+\end{table}
+
+\subsection{Design Tecnico}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.85\textwidth]{uc07_messaging/img/uc07_sequence.drawio}
+    \caption{Sequence Diagram - UC07}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[height=0.7\textheight]{uc07_messaging/img/uc07_backend_flowchart.drawio}
+    \caption{Backend Flowchart - UC07}
+\end{figure}
+
+\textbf{Validazioni comuni a tutti gli endpoint:}
+\begin{enumerate}
+    \item \textbf{Autenticazione JWT:} Tutti gli endpoint richiedono un token JWT valido.
+    \item \textbf{Estrazione senderId:} Il mittente viene sempre estratto dal token, mai dal body della richiesta.
+\end{enumerate}
+
+\textbf{Validazioni specifiche per POST /messages:}
+\begin{enumerate}
+    \item \textbf{Contenuto non vuoto:} Il messaggio deve avere contenuto.
+    \item \textbf{Anti auto-invio:} Non \`e possibile inviare messaggi a se stessi (\code{senderId != receiverId}).
+    \item \textbf{Destinatario esistente:} Verifica che l'utente destinatario esista nel sistema.
+\end{enumerate}

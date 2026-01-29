@@ -1,0 +1,645 @@
+% =============================================================================
+% CHAPTER 5: CONTRATTI DI INTERFACCIA
+% =============================================================================
+
+\chapter{Contratti di Interfaccia}
+
+\section{Specifiche API}
+
+In questa sezione vengono definiti gli endpoint del sistema. Tutte le richieste e le risposte utilizzano il formato \textbf{JSON}. Per le operazioni di scrittura e protezione dei dati, il sistema adotta lo standard \textbf{JWT} (JSON Web Token).
+
+\begin{nota}
+\textbf{Autenticazione:} Gli endpoint che richiedono autorizzazione devono includere l'header:\\
+\code{Authorization: Bearer <token\_jwt>}
+\end{nota}
+
+\begin{nota}
+\textbf{Risposta Errore Autorizzazione:} Se il token \`e mancante, invalido o scaduto, gli endpoint protetti restituiscono:
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Unauthorized"
+}
+\end{lstlisting}
+\end{nota}
+
+%------------------------------------------------------------------------------
+\subsection{POST /register}
+
+Registrazione di un nuovo utente.
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "email": "utente@esempio.it",
+  "username": "mario_rossi",
+  "password": "password"
+}
+\end{lstlisting}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "message": "User registered successfully"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Input non valido):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid input"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{POST /login}
+
+Autenticazione e rilascio del token.
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "email": "utente@esempio.it",
+  "password": "password"
+}
+\end{lstlisting}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Input non valido):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid input"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Credenziali errate):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid credentials"
+}
+\end{lstlisting}
+
+\begin{nota}
+\textbf{Sicurezza:} Il messaggio ``Invalid credentials'' \`e volutamente generico per prevenire attacchi di enumerazione utenti. Non viene mai rivelato se l'email \`e registrata o meno.
+\end{nota}
+
+%------------------------------------------------------------------------------
+\subsection{GET /books}
+
+Recupero della lista di tutti i libri disponibili.
+
+\textbf{Auth:} Opzionale (JWT)
+
+\begin{nota}
+\textbf{Filtro Identit\`a:} Se l'utente \`e autenticato (JWT valido), il sistema esclude automaticamente i libri pubblicati dall'utente stesso dalla lista restituita.
+\end{nota}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Ingegneria del Software",
+      "author": "Ian Sommerville",
+      "isbn": "978-8871926284",
+      "imagePath": "data:image/jpeg;base64,/9j/4AAQ...",
+      "teacher": "Prof. Bagnara",
+      "course": "Informatica",
+      "price": 35.00,
+      "sellerId": 10,
+      "sellerUsername": "username",
+      "available": true
+    }
+  ]
+}
+\end{lstlisting}
+
+\begin{nota}
+\textbf{Immagine:} Il campo \code{imagePath} contiene l'immagine codificata in formato base64 data URI, pronta per essere utilizzata direttamente come attributo \code{src} di un tag \code{<img>}. Se il libro non ha un'immagine associata, il campo sar\`a una stringa vuota.
+\end{nota}
+
+\textbf{Response (Error - Errore server):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Server error"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{GET /my-books}
+
+Recupera la lista di tutti i libri messi in vendita dall'utente correntemente loggato.
+
+\textbf{Auth:} Obbligatoria (JWT)
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 5,
+      "name": "Sistemi Operativi",
+      "author": "Silberschatz",
+      "isbn": "978-1118063330",
+      "imagePath": "data:image/jpeg;base64,...",
+      "teacher": "Prof. Veltri",
+      "course": "Informatica",
+      "price": 40.00,
+      "sellerId": 10,
+      "sellerUsername": "username",
+      "available": true
+    }
+  ]
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{POST /books}
+
+Inserimento di un nuovo libro nel catalogo.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "name": "Sistemi Operativi",
+  "author": "Silberschatz",
+  "isbn": "978-1122334455",
+  "image": "data:image/jpeg;base64,/9j/4AAQ...",
+  "teacher": "Prof. Bagnara",
+  "course": "Informatica",
+  "price": 28.00
+}
+\end{lstlisting}
+
+\begin{nota}
+Il campo \code{sellerId} viene estratto automaticamente dal JWT (claim \code{sub}) e non deve essere specificato nel body.
+\end{nota}
+
+\begin{nota}
+\textbf{Upload Immagine:} Il campo \code{image} \`e opzionale e accetta dati in formato base64 (con o senza prefisso data URI). Formati supportati: JPEG, PNG, WebP. Dimensione massima: 5MB.
+\end{nota}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "id": 105,
+  "message": "Libro messo in vendita con successo"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Input non valido):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid input"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Formato immagine non valido):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid file format"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - File troppo grande):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "File too large"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{PUT /books}
+
+Aggiornamento di un libro esistente. L'\textbf{id} \`e obbligatorio.
+
+\textbf{Auth:} JWT Required
+
+\begin{nota}
+\textbf{Ownership:} L'utente pu\`o modificare solo i propri libri. Il sistema verifica che \code{book.sellerId} corrisponda all'ID dell'utente autenticato.
+\end{nota}
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "id": 172,
+  "price": 25.00,
+  "available": false
+}
+\end{lstlisting}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "message": "Book updated"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Input non valido):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid input"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Libro non trovato):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Book not found"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Non proprietario):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Forbidden"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{DELETE /books}
+
+Rimozione di un libro.
+
+\textbf{Auth:} JWT Required
+
+\begin{nota}
+\textbf{Ownership:} L'utente pu\`o eliminare solo i propri libri. Il sistema verifica che \code{book.sellerId} corrisponda all'ID dell'utente autenticato.
+\end{nota}
+
+\textbf{Request Body:} \code{\{"id": 78\}}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "message": "Book deleted"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Input non valido):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Invalid input"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Libro non trovato):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Book not found"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Non proprietario):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Forbidden"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{POST /purchase}
+
+Effettua l'acquisto di un libro.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "bookId": 78
+}
+\end{lstlisting}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "message": "Purchase completed successfully",
+  "orderId": 501,
+  "sellerEmail": "venditore@email.it"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Libro non trovato):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Book not found"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Libro gi\`a venduto):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Book already sold"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Auto-acquisto):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Cannot purchase your own book"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{GET /purchases}
+
+Recupera lo storico degli acquisti dell'utente autenticato.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "data": [
+    {
+      "orderId": 501,
+      "book": {
+        "id": 78,
+        "name": "Ingegneria del Software",
+        "author": "Ian Sommerville",
+        "price": 35.00
+      },
+      "sellerUsername": "mario_rossi",
+      "purchaseDate": "2026-01-25T14:30:00Z"
+    }
+  ]
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Errore server):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Server error"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{GET /sales}
+
+Recupera lo storico delle vendite dell'utente autenticato.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "data": [
+    {
+      "orderId": 501,
+      "book": {
+        "id": 78,
+        "name": "Ingegneria del Software",
+        "author": "Ian Sommerville",
+        "price": 35.00
+      },
+      "buyerUsername": "luigi_verdi",
+      "saleDate": "2026-01-25T14:30:00Z"
+    }
+  ]
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Errore server):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Server error"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{GET /conversations}
+
+Recupera la lista delle conversazioni dell'utente autenticato.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "data": [
+    {
+      "userId": 5,
+      "username": "luigi_verdi",
+      "lastMessage": "Ok, ci vediamo domani",
+      "lastMessageDate": "2026-01-25T14:30:00Z"
+    }
+  ]
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Errore server):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Server error"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{GET /messages?userId=\{id\}}
+
+Recupera i messaggi scambiati con un utente specifico.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Query Params:} \code{userId} (required)
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "senderId": 5,
+      "receiverId": 10,
+      "content": "Ciao, il libro e' ancora disponibile?",
+      "createdAt": "2026-01-25T14:00:00Z"
+    }
+  ]
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Utente non trovato):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "User not found"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\subsection{POST /messages}
+
+Invia un nuovo messaggio a un utente.
+
+\textbf{Auth:} JWT Required
+
+\textbf{Request Body:}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "receiverId": 5,
+  "content": "Ciao, sono interessato al libro"
+}
+\end{lstlisting}
+
+\textbf{Response (Success):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "success",
+  "message": "Message sent",
+  "messageId": 42
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Destinatario non trovato):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "User not found"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Messaggio a se stesso):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Cannot message yourself"
+}
+\end{lstlisting}
+
+\textbf{Response (Error - Contenuto vuoto):}
+\begin{lstlisting}[language=json,style=jsonStyle]
+{
+  "status": "error",
+  "message": "Message content required"
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\begin{nota}
+\textbf{Ricerca Avanzata (RF05):} La funzionalit\`a di ricerca per ISBN, corso e docente \`e implementata interamente lato Frontend mediante filtri JavaScript sui dati gi\`a recuperati tramite \code{GET /books}. Non sono previsti endpoint dedicati.
+\end{nota}
+
+%------------------------------------------------------------------------------
+\section{Interfaccia Database}
+
+\subsection{Entity Classes}
+
+Oggetti PHP rappresentanti i dati scambiati tra i vari moduli. Il campo \code{id} \`e nullable per poter creare nuovi oggetti.
+
+\begin{lstlisting}[style=phpStyle]
+class User {
+    public ?int $id;
+    public string $username;
+    public string $email;
+    public string $password;
+}
+
+class Book {
+    public ?int $id;
+    public string $name;
+    public string $author;
+    public string $isbn;
+    public string $imagePath;
+    public string $teacher;
+    public string $course;
+    public float $price;
+    public int $sellerId;
+    public bool $available;
+}
+
+class Transaction {
+    public ?int $id;
+    public int $bookId;
+    public int $buyerId;
+    public int $sellerId;
+    public DateTime $createdAt;
+}
+
+class Message {
+    public ?int $id;
+    public int $senderId;
+    public int $receiverId;
+    public string $content;
+    public DateTime $createdAt;
+}
+\end{lstlisting}
+
+\subsection{Metodi Gestione Utenti}
+
+\begin{itemize}
+    \item \code{registerUser(User \$user): bool} -- Esegue l'insert del nuovo utente.
+    \item \code{verifyCredentials(string \$email, string \$password): ?int} -- Ritorna l'ID utente se le credenziali sono corrette (con verifica \code{password\_verify}), altrimenti \code{null}.
+    \item \code{getUserById(int \$id): ?User} -- Ritorna l'utente con l'ID specificato, oppure \code{null} se non trovato.
+\end{itemize}
+
+\begin{nota}
+Il metodo \code{getUserById} \`e stato aggiunto per supportare il recupero dell'email del venditore in \code{POST /purchase}.
+\end{nota}
+
+\subsection{Metodi Gestione Libri}
+
+\begin{itemize}
+    \item \code{getAllBooks(): array} -- Ritorna un array di oggetti \code{Book} disponibili.
+    \item \code{insertBook(Book \$book): int} -- Inserisce un libro e ritorna l'ID generato.
+    \item \code{updateBook(Book \$book): bool} -- Aggiorna i campi modificati.
+    \item \code{deleteBook(int \$id): bool} -- Rimuove logicamente o fisicamente il record.
+\end{itemize}
+
+\subsection{Metodi Gestione Transazioni}
+
+\begin{itemize}
+    \item \code{placeOrder(int \$bookId, int \$buyerId): int} -- Crea un record nella tabella ordini, aggiorna \code{available = false} sul libro e ritorna l'ID ordine.
+    \item \code{getPurchasesByBuyer(int \$buyerId): array} -- Ritorna lo storico acquisti dell'utente.
+    \item \code{getSalesBySeller(int \$sellerId): array} -- Ritorna lo storico vendite dell'utente.
+\end{itemize}
+
+\subsection{Metodi Gestione Messaggi}
+
+\begin{itemize}
+    \item \code{getConversations(int \$userId): array} -- Ritorna la lista delle conversazioni con ultimo messaggio.
+    \item \code{getMessages(int \$userId1, int \$userId2): array} -- Ritorna i messaggi tra due utenti ordinati cronologicamente.
+    \item \code{sendMessage(Message \$message): int} -- Inserisce un messaggio e ritorna l'ID generato.
+\end{itemize}

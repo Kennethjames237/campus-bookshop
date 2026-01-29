@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bacheca - Mercatino Libri UNIPR</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- Custom CSS -->
+    <link href="../css/style.css" rel="stylesheet" />
+    <link href="../css/books.css" rel="stylesheet" />
+</head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/">UniPr Libri</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/books">Bacheca</a>
+            </li>
+            <li class="nav-item" id="message-wrapper" style="display: none;">
+                <a class="nav-link" href="/chat">
+                    <img src="../img/message.png" alt="Messages" style="width: 30px; height: 30px;">
+                </a>
+            </li>
+            <li class="nav-item" id="auth-wrapper">
+              <a class="nav-link" href="#" id="authBtn">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <!-- Header & Action -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Bacheca Libri</h2>
+        <button id="btn-insert-ad" class="btn btn-primary">
+          Inserisci Annuncio
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <!-- Filters -->
+      <div class="filters-section">
+        <!-- Main Text Search -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-12">
+                <input type="text" id="filter-general" class="form-control form-control-lg" placeholder="Cerca per Titolo o Autore...">
+            </div>
+        </div>
+        
+        <!-- Advanced Specific Filters -->
+        <div class="row g-3">
+          <div class="col-md-3">
+            <input type="text" id="filter-isbn" class="form-control" placeholder="ISBN">
+          </div>
+          <div class="col-md-3">
+             <input type="text" id="filter-teacher" class="form-control" placeholder="Docente">
+          </div>
+          <div class="col-md-4">
+             <input type="text" id="filter-course" class="form-control" placeholder="Corso">
+          </div>
+          <div class="col-md-2">
+            <button id="btn-reset-filters" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-x-circle"></i> Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Books Grid -->
+      <div
+        id="books-container"
+        class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4"
+      >
+        <!-- Books will be injected here by BooksPresenter -->
+        <div class="col text-center w-100 mt-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insert Ad Modal -->
+    <div class="modal fade" id="insertAdModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inserisci Nuovo Annuncio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="insertAdForm">
+                        <div class="mb-3">
+                            <label for="bookTitle" class="form-label">Titolo del Libro</label>
+                            <input type="text" class="form-control" id="bookTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookAuthor" class="form-label">Autore</label>
+                            <input type="text" class="form-control" id="bookAuthor" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookCourse" class="form-label">Corso</label>
+                            <input type="text" class="form-control" id="bookCourse">
+                        </div>
+                        <div class="mb-3">
+                             <label for="bookTeacher" class="form-label">Docente</label>
+                             <input type="text" class="form-control" id="bookTeacher" placeholder="Es. Prof. Rossi">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookIsbn" class="form-label">ISBN</label>
+                            <input type="text" class="form-control" id="bookIsbn" required placeholder="978-...">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookPrice" class="form-label">Prezzo (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="bookPrice" required>
+                        </div>
+                        <div class="mb-3">
+                             <label for="bookImageFile" class="form-label">Immagine Copertina</label>
+                             <input type="file" class="form-control" id="bookImageFile" accept="image/png, image/jpeg, image/webp">
+                        </div>
+                        <!-- Hidden field if we want to fallback to URL or just keep logic clean -->
+
+                        <div id="adAlertPlaceholder"></div>
+                        <button type="submit" class="btn btn-success w-100">Pubblica Annuncio</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- App Logic -->
+    <script type="module" src="../js/app.js"></script>
+  </body>
+</html>

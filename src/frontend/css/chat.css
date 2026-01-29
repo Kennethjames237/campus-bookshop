@@ -1,0 +1,98 @@
+body {
+    display: block !important;
+    background-color: #f8f9fa;
+}
+
+/* Chat Layout */
+.chat-container {
+    height: 80vh; /* Fixed height for the chat window */
+    background-color: #fff;
+}
+
+/* Sidebar */
+.chat-sidebar {
+    height: 100%;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+}
+
+.conversation-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.conversation-item:hover {
+    background-color: #e9ecef;
+}
+
+.conversation-item.active {
+    background-color: #e7f1ff; /* Light blue */
+    border-left: 4px solid #0d6efd;
+}
+
+/* Main Area */
+.chat-main {
+    height: 100%;
+    background-color: #fff;
+}
+
+#messages-area {
+    background-color: #f5f6f7;
+    /* Optional: background pattern */
+}
+
+/* Messages */
+.message-bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.message-sent {
+    background-color: #0d6efd; /* Bootstrap Primary */
+    color: white;
+    align-self: flex-end; /* Flexbox alignment */
+    border-bottom-right-radius: 2px;
+}
+
+.message-received {
+    background-color: #e9ecef; /* Light gray */
+    color: #212529;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    margin-top: 4px;
+    opacity: 0.8;
+    text-align: right;
+}
+
+/* Wrapper for flex alignment of messages */
+.message-row {
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        height: auto;
+        min-height: 80vh;
+    }
+    
+    .chat-sidebar {
+        height: 300px;
+        border-right: 0 !important;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .chat-main {
+        height: 60vh;
+    }
+}
